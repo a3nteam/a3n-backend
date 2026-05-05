@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateContactDetailRequest;
 use App\Models\ContactDetail;
 use Illuminate\Http\Request;
 
@@ -36,20 +37,10 @@ class ContactDetailController extends Controller
     }
 
     // POST /contact-details
-    public function store(Request $request)
+    public function store(StoreContactDetailRequest $request)
     {
-        $validated = $request->validate([
-            'first_name'          => 'required|string|max:255',
-            'last_name'           => 'required|string|max:255',
-            'email'               => 'required|email|unique:contact_details,email',
-            'company'             => 'nullable|string|max:255',
-            'phone_number'        => 'nullable|string|max:20',
-            'service_id'          => 'required|uuid|exists:services,id',
-            'budget'              => 'nullable|string|max:255',
-            'service_description' => 'required|string',
-        ]);
 
-        $contact = ContactDetail::create($validated);
+        $contact = ContactDetail::create($request->validated());
 
         return response()->json([
             'success' => true,
@@ -59,7 +50,7 @@ class ContactDetailController extends Controller
     }
 
     // PUT /contact-details/{id}
-    public function update(Request $request, $id)
+    public function update(UpdateContactDetailRequest $request, $id)
     {
         $contact = ContactDetail::find($id);
 
@@ -70,18 +61,7 @@ class ContactDetailController extends Controller
             ], 404);
         }
 
-        $validated = $request->validate([
-            'first_name'          => 'sometimes|required|string|max:255',
-            'last_name'           => 'sometimes|required|string|max:255',
-            'email'               => 'sometimes|required|email|unique:contact_details,email,' . $id,
-            'company'             => 'nullable|string|max:255',
-            'phone_number'        => 'nullable|string|max:20',
-            'service_id'          => 'sometimes|required|uuid|exists:services,id',
-            'budget'              => 'nullable|string|max:255',
-            'service_description' => 'sometimes|required|string',
-        ]);
-
-        $contact->update($validated);
+        $contact->update($request->validated());
 
         return response()->json([
             'success' => true,

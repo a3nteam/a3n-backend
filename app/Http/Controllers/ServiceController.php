@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreServiceRequest;
+use App\Http\Requests\UpdateServiceRequest;
 use App\Models\Service;
 use Illuminate\Http\Request;
 
@@ -36,13 +38,8 @@ class ServiceController extends Controller
     }
 
     // POST /services
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'name'        => 'required|string|max:255',
-            'description' => 'nullable|string',
-        ]);
-
+    public function store(StoreServiceRequest $request)
+    {        $validated = $request->validated();
         $service = Service::create($validated);
 
         return response()->json([
@@ -53,7 +50,7 @@ class ServiceController extends Controller
     }
 
     // PUT /services/{id}
-    public function update(Request $request, $id)
+    public function update(UpdateServiceRequest $request, $id)
     {
         $service = Service::find($id);
 
@@ -64,12 +61,8 @@ class ServiceController extends Controller
             ], 404);
         }
 
-        $validated = $request->validate([
-            'name'        => 'sometimes|required|string|max:255',
-            'description' => 'nullable|string',
-        ]);
 
-        $service->update($validated);
+        $service->update($request->validated());
 
         return response()->json([
             'success' => true,
