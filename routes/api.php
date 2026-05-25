@@ -9,4 +9,4 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 Route::apiResource('services', ServiceController::class);
-Route::apiResource('contact-details', ContactDetailController::class);
+Route::apiResource('contact-details', ContactDetailController::class)->middlewareFor('store', 'throttle:contact-form');

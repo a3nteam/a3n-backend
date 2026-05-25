@@ -1,7 +1,9 @@
 <?php
 
 namespace App\Providers;
-
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +21,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+         RateLimiter::for('contact-form', function (Request $request) {
+            $email = strtolower((string) $request->input('email'));
+            $ip = $request->ip();
+
+            return Limit::perMinute(3)->by($email . '|' . $ip);
+        });
     }
 }
