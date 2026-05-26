@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Enum\ContactFormType;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreContactDetailRequest extends FormRequest
 {
@@ -25,12 +27,18 @@ class StoreContactDetailRequest extends FormRequest
         return [
             'first_name'          => 'required|string|max:255',
             'last_name'           => 'required|string|max:255',
-            'email'               => 'required|email|unique:contact_details,email',
+            'email'               => 'required|email',
             'company'             => 'nullable|string|max:255',
             'phone_number'        => 'nullable|string|max:20',
-            'service_id'          => 'required|uuid|exists:services,id',
+            'service_id' => [
+            Rule::requiredIf(fn () => $this->input('form_type') === ContactFormType::CONTACT->value),
+            'nullable',
+            'uuid',
+            'exists:services,id',
+        ],
             'budget'              => 'nullable|string|max:255',
             'service_description' => 'required|string',
+            'form_type'           => ['nullable', Rule::enum(ContactFormType::class)],
         ];
     }
 }

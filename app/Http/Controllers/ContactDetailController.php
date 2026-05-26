@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enum\ContactFormType;
 use App\Http\Requests\StoreContactDetailRequest;
 use App\Http\Requests\UpdateContactDetailRequest;
 use App\Mail\ContactForm;
@@ -43,13 +44,18 @@ class ContactDetailController extends Controller
     // POST /contact-details
     public function store(StoreContactDetailRequest $request)
     {
-
         $contact = ContactDetail::create($request->validated());
         $contact->load('service');
-        Mail::to(config('app.admin_email'))
+            if ($contact->form_type === ContactFormType::CONTACT->value) {
+                        Mail::to(config('app.admin_email'))
         ->queue(new ContactForm($contact));
         Mail::to($contact->email)
         ->queue(new ContactFormMessageReceived($contact));
+            }
+            else{
+                
+            }
+
         return response()->json([
             'success' => true,
             'message' => 'Contact created successfully',
