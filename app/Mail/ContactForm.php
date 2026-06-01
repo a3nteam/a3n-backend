@@ -40,8 +40,8 @@ class ContactForm extends Mailable
     {
         return new Content(
             view: $this->contact->form_type === ContactFormType::CONSULTATION->value
-                ? 'emails.consultation'
-                : 'emails.contact',
+                ? 'emails.consultation-form-message-received'
+                : 'emails.contact-form-message-received',
             with: [
                 'contact' => $this->contact,
             ],

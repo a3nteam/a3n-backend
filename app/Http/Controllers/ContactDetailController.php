@@ -63,7 +63,6 @@ class ContactDetailController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Contact created successfully',
-            'data'    => $contact,
         ], 201);
     }
 
