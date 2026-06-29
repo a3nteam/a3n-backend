@@ -28,6 +28,7 @@ return [
 
     'env' => env('APP_ENV', 'production'),
     'admin_email' => env('MAIL_FROM_ADDRESS', 'default@example.com'),
+    'auto_seo_bearer_token'=>env('AUTOSEO_WEBHOOK_TOKEN'),
 
     /*
     |--------------------------------------------------------------------------
