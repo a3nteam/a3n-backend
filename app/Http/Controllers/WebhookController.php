@@ -9,7 +9,7 @@ class WebhookController extends Controller
 {
         public function handle(Request $request)
     {
-        $expectedToken = config("auto_seo_bearer_token");
+        $expectedToken = config("app.auto_seo_bearer_token");
 
         $token = str_replace(
             'Bearer ',
