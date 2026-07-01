@@ -7,7 +7,6 @@ use App\Enum\BlogStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Blog;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 class WebhookController extends Controller
 {
