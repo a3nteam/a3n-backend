@@ -26,13 +26,14 @@ class WebhookController extends Controller
         }
         
 
-        $this->saveArticles($request->all());
+        $savedBlog=$this->saveArticles($request->all());
 
         return response()->json([
-            'success' => true
+            'success' => true,
+          'url' => config('app.frontend_url') . '/blog/' . $savedBlog->slug,
         ]);
     }
-        private function saveArticles($article): void
+        private function saveArticles($article)
     {
         $status = $article['status'] ?? 'draft';
         if($status==BlogStatus::PUBLISHED->value){
@@ -50,7 +51,7 @@ $content = preg_replace('/<p\b[^>]*>.*?<\/p>/is', '', $content, 1);
 
 // Optional: remove leading whitespace/newlines
 $content = trim($content);
-          Blog::updateOrCreate(
+         $blog= Blog::updateOrCreate(
             [
                 'autoseo_id' => $article['id'],
             ],
@@ -72,6 +73,7 @@ $content = trim($content);
         );
   
         }
+        return $blog;
 
     }
 }
