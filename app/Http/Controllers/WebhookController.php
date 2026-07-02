@@ -34,15 +34,22 @@ class WebhookController extends Controller
     }
         private function saveArticles($article): void
     {
-        if($article['status']==BlogStatus::PUBLISHED->value){
-        $content = $article['content_html'];
+        $status = $article['status'] ?? 'draft';
+        if($status==BlogStatus::PUBLISHED->value){
+$content = $article['content_html'];
 
-        // Extract the first paragraph from the HTML
-        preg_match('/<p\b[^>]*>(.*?)<\/p>/is', $content, $matches);
+// Extract the first paragraph
+preg_match('/<p\b[^>]*>(.*?)<\/p>/is', $content, $matches);
 
-        $excerpt = isset($matches[1])
-            ? Str::limit(trim(strip_tags($matches[1])), 200)
-            : Str::limit(trim(strip_tags($content)), 200);
+$excerpt = isset($matches[1])
+    ? trim(strip_tags($matches[1]))
+    : trim(strip_tags($content));
+
+// Remove only the first paragraph from the content
+$content = preg_replace('/<p\b[^>]*>.*?<\/p>/is', '', $content, 1);
+
+// Optional: remove leading whitespace/newlines
+$content = trim($content);
           Blog::updateOrCreate(
             [
                 'autoseo_id' => $article['id'],
