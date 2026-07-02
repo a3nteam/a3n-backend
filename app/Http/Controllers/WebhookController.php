@@ -58,7 +58,7 @@ $content = trim($content);
             [
                 'title' => $article['title'],
                 'slug' => $article['slug'],
-                'content' => $article['content_html'],
+                'content' => $content,
                 'status' => $article['status'],
                 'excerpt' => $excerpt,
                 'description' => $article['metaDescription'],
